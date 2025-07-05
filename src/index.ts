@@ -1,5 +1,5 @@
 /**
- * OpenAI Vision Token Calculator
+ * Image Token Meter
  * 
  * A TypeScript library to calculate token consumption for images in OpenAI Vision models.
  * Supports GPT-4o, GPT-4 Vision, and other vision-enabled models.
@@ -7,7 +7,7 @@
  * 
  * @example
  * ```typescript
- * import { calculateImageTokens } from 'openai-vision-token-calculator';
+ * import { calculateImageTokens } from 'image-token-meter';
  * 
  * // Calculate tokens for GPT-4o (default)
  * const result = calculateImageTokens({

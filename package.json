@@ -1,5 +1,5 @@
 {
-  "name": "openai-vision-token-calculator",
+  "name": "image-token-meter",
   "version": "1.0.0",
   "description": "Calculate token consumption for images in OpenAI Vision models (GPT-4o, GPT-4 Vision, etc.)",
   "main": "./dist/index.js",
@@ -36,7 +36,10 @@
     "calculator",
     "typescript",
     "gpt-4-vision",
-    "gpt-4-turbo"
+    "gpt-4-turbo",
+    "meter",
+    "usage",
+    "cost"
   ],
   "author": "",
   "license": "MIT",
@@ -53,10 +56,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/openai-vision-token-calculator.git"
+    "url": "https://github.com/yourusername/image-token-meter.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/openai-vision-token-calculator/issues"
+    "url": "https://github.com/yourusername/image-token-meter/issues"
   },
-  "homepage": "https://github.com/yourusername/openai-vision-token-calculator#readme"
+  "homepage": "https://github.com/yourusername/image-token-meter#readme"
 }

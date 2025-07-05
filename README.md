@@ -1,4 +1,4 @@
-# OpenAI Vision Token Calculator
+# Image Token Meter
 
 A TypeScript library to calculate token consumption for images in OpenAI Vision models. Works in both Node.js and browser environments.
 
@@ -15,7 +15,7 @@ A TypeScript library to calculate token consumption for images in OpenAI Vision 
 ## Installation
 
 ```bash
-npm install openai-vision-token-calculator
+npm install image-token-meter
 ```
 
 ## Usage
@@ -23,7 +23,7 @@ npm install openai-vision-token-calculator
 ### Basic Usage
 
 ```typescript
-import { calculateImageTokens } from 'openai-vision-token-calculator';
+import { calculateImageTokens } from 'image-token-meter';
 
 // Calculate tokens for GPT-4o (default model)
 const result = calculateImageTokens({
@@ -74,7 +74,7 @@ console.log(result.tokens); // 85
 ### Batch Processing with Multiple Models
 
 ```typescript
-import { calculateBatchImageTokens } from 'openai-vision-token-calculator';
+import { calculateBatchImageTokens } from 'image-token-meter';
 
 const images = [
   { width: 1024, height: 768, detail: 'high', model: 'gpt-4o' },
@@ -96,7 +96,7 @@ Object.entries(batch.summary.byModel).forEach(([model, stats]) => {
 ### Custom Pricing
 
 ```typescript
-import { calculateImageTokens, createPricing } from 'openai-vision-token-calculator';
+import { calculateImageTokens, createPricing } from 'image-token-meter';
 
 // Create custom pricing (e.g., $2.50 per 1k tokens)
 const customPricing = createPricing(2.50);
@@ -113,7 +113,7 @@ console.log(`Cost with custom pricing: $${result.cost.toFixed(4)}`);
 ### Available Models
 
 ```typescript
-import { getAvailableModels, getModel } from 'openai-vision-token-calculator';
+import { getAvailableModels, getModel } from 'image-token-meter';
 
 // List all available models
 const models = getAvailableModels();
@@ -280,7 +280,7 @@ import type {
   ImageTokenResult, 
   VisionModel,
   ModelConfig 
-} from 'openai-vision-token-calculator';
+} from 'image-token-meter';
 ```
 
 ## License
