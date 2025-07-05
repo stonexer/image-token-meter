@@ -1,0 +1,65 @@
+{
+  "name": "image-token-meter",
+  "version": "1.0.0",
+  "description": "Calculate token consumption for images in OpenAI Vision models (GPT-4o, GPT-4 Vision, etc.)",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build",
+    "serve": "npx http-server . -p 3000 -o /examples/browser-demo.html"
+  },
+  "keywords": [
+    "openai",
+    "gpt-4o",
+    "gpt-4",
+    "gpt4",
+    "vision",
+    "image",
+    "token",
+    "calculator",
+    "typescript",
+    "gpt-4-vision",
+    "gpt-4-turbo",
+    "meter",
+    "usage",
+    "cost"
+  ],
+  "author": "stonexer",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vitest/ui": "^1.0.0",
+    "esbuild": "^0.19.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stonexer/image-token-meter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/stonexer/image-token-meter/issues"
+  },
+  "homepage": "https://github.com/stonexer/image-token-meter#readme"
+}
