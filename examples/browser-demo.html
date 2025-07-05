@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT-4o Image Token Calculator Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+        .dimensions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        button:hover {
+            background-color: #0052cc;
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            display: none;
+        }
+        .result.show {
+            display: block;
+        }
+        .result-item {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .result-label {
+            color: #666;
+        }
+        .result-value {
+            font-weight: 600;
+            color: #333;
+        }
+        .highlight {
+            font-size: 24px;
+            color: #0066cc;
+        }
+        .details {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+        }
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .preset-btn {
+            padding: 8px 12px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .preset-btn:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GPT-4o Image Token Calculator</h1>
+        <p class="subtitle">Calculate token consumption for images in OpenAI's GPT-4o model</p>
+        
+        <div class="preset-buttons">
+            <button class="preset-btn" onclick="setPreset(1080, 1080, 'Instagram')">Instagram Square</button>
+            <button class="preset-btn" onclick="setPreset(1920, 1080, 'Full HD')">Full HD</button>
+            <button class="preset-btn" onclick="setPreset(3840, 2160, '4K')">4K</button>
+            <button class="preset-btn" onclick="setPreset(1200, 675, 'Twitter')">Twitter Image</button>
+            <button class="preset-btn" onclick="setPreset(4032, 3024, 'iPhone Photo')">iPhone Photo</button>
+            <button class="preset-btn" onclick="setPreset(512, 512, 'Small')">512×512</button>
+        </div>
+        
+        <div class="dimensions">
+            <div class="input-group">
+                <label for="width">Width (pixels)</label>
+                <input type="number" id="width" value="1920" min="1" max="10000">
+            </div>
+            <div class="input-group">
+                <label for="height">Height (pixels)</label>
+                <input type="number" id="height" value="1080" min="1" max="10000">
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label for="detail">Detail Level</label>
+            <select id="detail">
+                <option value="high">High (Full Resolution)</option>
+                <option value="low">Low (512×512)</option>
+                <option value="auto">Auto (defaults to High)</option>
+            </select>
+        </div>
+        
+        <button onclick="calculate()">Calculate Tokens</button>
+        
+        <div id="result" class="result">
+            <div class="result-item">
+                <span class="result-label">Tokens:</span>
+                <span class="result-value highlight" id="tokens"></span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Cost (at $5.00/1k tokens):</span>
+                <span class="result-value" id="cost"></span>
+            </div>
+            
+            <div class="details">
+                <h3>Calculation Details</h3>
+                <div class="result-item">
+                    <span class="result-label">Original Size:</span>
+                    <span class="result-value" id="originalSize"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Resized To:</span>
+                    <span class="result-value" id="resizedSize"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Tiles:</span>
+                    <span class="result-value" id="tiles"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Base Tokens:</span>
+                    <span class="result-value" id="baseTokens"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Tokens per Tile:</span>
+                    <span class="result-value" id="tokensPerTile"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the calculator from the built ES module
+        import { calculateImageTokens } from '../dist/index.mjs';
+        
+        // Make calculate function available globally
+        window.calculate = function() {
+            const width = parseInt(document.getElementById('width').value);
+            const height = parseInt(document.getElementById('height').value);
+            const detail = document.getElementById('detail').value;
+            
+            if (!width || !height || width <= 0 || height <= 0) {
+                alert('Please enter valid dimensions');
+                return;
+            }
+            
+            const result = calculateImageTokens({
+                width,
+                height,
+                detail
+            });
+            
+            // Display results
+            document.getElementById('tokens').textContent = result.tokens.toLocaleString();
+            document.getElementById('cost').textContent = `$${result.cost.toFixed(4)}`;
+            document.getElementById('originalSize').textContent = `${width} × ${height}`;
+            document.getElementById('resizedSize').textContent = 
+                `${result.details.resizedSize.width} × ${result.details.resizedSize.height}`;
+            document.getElementById('tiles').textContent = 
+                `${result.details.tiles.width} × ${result.details.tiles.height} = ${result.details.tiles.total} tiles`;
+            document.getElementById('baseTokens').textContent = result.details.baseTokens;
+            document.getElementById('tokensPerTile').textContent = result.details.tokensPerTile;
+            
+            document.getElementById('result').classList.add('show');
+        };
+        
+        // Set preset dimensions
+        window.setPreset = function(width, height, name) {
+            document.getElementById('width').value = width;
+            document.getElementById('height').value = height;
+            calculate();
+        };
+        
+        // Calculate on page load
+        calculate();
+    </script>
+</body>
+</html>
