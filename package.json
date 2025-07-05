@@ -41,7 +41,7 @@
     "usage",
     "cost"
   ],
-  "author": "",
+  "author": "stonexer",
   "license": "MIT",
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -56,10 +56,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/image-token-meter.git"
+    "url": "https://github.com/stonexer/image-token-meter.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/image-token-meter/issues"
+    "url": "https://github.com/stonexer/image-token-meter/issues"
   },
-  "homepage": "https://github.com/yourusername/image-token-meter#readme"
+  "homepage": "https://github.com/stonexer/image-token-meter#readme"
 }
