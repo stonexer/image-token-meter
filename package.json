@@ -1,7 +1,7 @@
 {
-  "name": "gpt4o-image-token-calculator",
+  "name": "openai-vision-token-calculator",
   "version": "1.0.0",
-  "description": "Calculate GPT-4o image token consumption for OpenAI Vision API",
+  "description": "Calculate token consumption for images in OpenAI Vision models (GPT-4o, GPT-4 Vision, etc.)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -22,17 +22,21 @@
     "test:ui": "vitest --ui",
     "test:coverage": "vitest --coverage",
     "typecheck": "tsc --noEmit",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "serve": "npx http-server . -p 3000 -o /examples/browser-demo.html"
   },
   "keywords": [
     "openai",
     "gpt-4o",
+    "gpt-4",
     "gpt4",
     "vision",
     "image",
     "token",
     "calculator",
-    "typescript"
+    "typescript",
+    "gpt-4-vision",
+    "gpt-4-turbo"
   ],
   "author": "",
   "license": "MIT",
@@ -49,10 +53,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/gpt4o-image-token-calculator.git"
+    "url": "https://github.com/yourusername/openai-vision-token-calculator.git"
   },
   "bugs": {
-    "url": "https://github.com/yourusername/gpt4o-image-token-calculator/issues"
+    "url": "https://github.com/yourusername/openai-vision-token-calculator/issues"
   },
-  "homepage": "https://github.com/yourusername/gpt4o-image-token-calculator#readme"
+  "homepage": "https://github.com/yourusername/openai-vision-token-calculator#readme"
 }

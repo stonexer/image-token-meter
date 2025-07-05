@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPT-4o Image Token Calculator Demo</title>
+    <title>OpenAI Vision Token Calculator Demo</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -114,12 +114,34 @@
         .preset-btn:hover {
             background-color: #e0e0e0;
         }
+        .model-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .comparison {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-radius: 4px;
+            border: 1px solid #cce7ff;
+        }
+        .comparison h4 {
+            margin-top: 0;
+            color: #0066cc;
+        }
+        .comparison-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>GPT-4o Image Token Calculator</h1>
-        <p class="subtitle">Calculate token consumption for images in OpenAI's GPT-4o model</p>
+        <h1>OpenAI Vision Token Calculator</h1>
+        <p class="subtitle">Calculate token consumption for images in OpenAI Vision models</p>
         
         <div class="preset-buttons">
             <button class="preset-btn" onclick="setPreset(1080, 1080, 'Instagram')">Instagram Square</button>
@@ -142,6 +164,19 @@
         </div>
         
         <div class="input-group">
+            <label for="model">Model</label>
+            <select id="model">
+                <option value="gpt-4o" selected>GPT-4o ($5.00/1k tokens)</option>
+                <option value="gpt-4o-mini">GPT-4o Mini ($0.15/1k tokens)</option>
+                <option value="gpt-4-vision-preview">GPT-4 Vision ($10.00/1k tokens)</option>
+                <option value="gpt-4-turbo">GPT-4 Turbo ($10.00/1k tokens)</option>
+                <option value="gpt-4-turbo-2024-04-09">GPT-4 Turbo (2024-04-09) ($10.00/1k tokens)</option>
+                <option value="gpt-4-1106-vision-preview">GPT-4 Vision (1106) ($10.00/1k tokens)</option>
+            </select>
+            <div class="model-info" id="modelInfo"></div>
+        </div>
+        
+        <div class="input-group">
             <label for="detail">Detail Level</label>
             <select id="detail">
                 <option value="high">High (Full Resolution)</option>
@@ -154,11 +189,15 @@
         
         <div id="result" class="result">
             <div class="result-item">
+                <span class="result-label">Model:</span>
+                <span class="result-value" id="modelName"></span>
+            </div>
+            <div class="result-item">
                 <span class="result-label">Tokens:</span>
                 <span class="result-value highlight" id="tokens"></span>
             </div>
             <div class="result-item">
-                <span class="result-label">Cost (at $5.00/1k tokens):</span>
+                <span class="result-label">Cost:</span>
                 <span class="result-value" id="cost"></span>
             </div>
             
@@ -185,18 +224,33 @@
                     <span class="result-value" id="tokensPerTile"></span>
                 </div>
             </div>
+            
+            <div class="comparison" id="comparison">
+                <h4>Model Comparison</h4>
+                <div id="comparisonContent"></div>
+            </div>
         </div>
     </div>
 
     <script type="module">
         // Import the calculator from the built ES module
-        import { calculateImageTokens } from '../dist/index.mjs';
+        import { calculateImageTokens, getModel, MODELS } from '../dist/index.mjs';
+        
+        // Update model info on change
+        function updateModelInfo() {
+            const modelId = document.getElementById('model').value;
+            const model = getModel(modelId);
+            if (model) {
+                document.getElementById('modelInfo').textContent = model.notes || '';
+            }
+        }
         
         // Make calculate function available globally
         window.calculate = function() {
             const width = parseInt(document.getElementById('width').value);
             const height = parseInt(document.getElementById('height').value);
             const detail = document.getElementById('detail').value;
+            const model = document.getElementById('model').value;
             
             if (!width || !height || width <= 0 || height <= 0) {
                 alert('Please enter valid dimensions');
@@ -206,10 +260,12 @@
             const result = calculateImageTokens({
                 width,
                 height,
-                detail
+                detail,
+                model
             });
             
             // Display results
+            document.getElementById('modelName').textContent = result.modelName;
             document.getElementById('tokens').textContent = result.tokens.toLocaleString();
             document.getElementById('cost').textContent = `$${result.cost.toFixed(4)}`;
             document.getElementById('originalSize').textContent = `${width} × ${height}`;
@@ -220,6 +276,26 @@
             document.getElementById('baseTokens').textContent = result.details.baseTokens;
             document.getElementById('tokensPerTile').textContent = result.details.tokensPerTile;
             
+            // Calculate comparison for all models
+            const comparisonHtml = Object.values(MODELS)
+                .filter(m => m.supportsVision)
+                .map(m => {
+                    const compareResult = calculateImageTokens({
+                        width,
+                        height,
+                        detail,
+                        model: m.id
+                    });
+                    return `
+                        <div class="comparison-item">
+                            <span>${m.name}:</span>
+                            <span>${compareResult.tokens} tokens, $${compareResult.cost.toFixed(4)}</span>
+                        </div>
+                    `;
+                })
+                .join('');
+            
+            document.getElementById('comparisonContent').innerHTML = comparisonHtml;
             document.getElementById('result').classList.add('show');
         };
         
@@ -230,7 +306,17 @@
             calculate();
         };
         
-        // Calculate on page load
+        // Add model change listener
+        document.getElementById('model').addEventListener('change', () => {
+            updateModelInfo();
+            const resultDiv = document.getElementById('result');
+            if (resultDiv.classList.contains('show')) {
+                calculate();
+            }
+        });
+        
+        // Initialize
+        updateModelInfo();
         calculate();
     </script>
 </body>

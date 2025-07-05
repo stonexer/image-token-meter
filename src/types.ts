@@ -1,7 +1,20 @@
 /**
- * Image detail level for GPT-4o Vision API
+ * Image detail level for OpenAI Vision API
  */
 export type ImageDetail = 'high' | 'low' | 'auto';
+
+/**
+ * Supported OpenAI Vision models
+ */
+export type VisionModel = 
+  | 'gpt-4o'
+  | 'gpt-4o-2024-05-13'
+  | 'gpt-4o-mini'
+  | 'gpt-4-vision-preview'
+  | 'gpt-4-turbo'
+  | 'gpt-4-turbo-2024-04-09'
+  | 'gpt-4-1106-vision-preview'
+  | string; // Allow custom model strings
 
 /**
  * Input parameters for calculating image tokens
@@ -22,6 +35,12 @@ export interface ImageTokenInput {
    * @default 'high'
    */
   detail?: ImageDetail;
+  
+  /**
+   * Model to calculate tokens for
+   * @default 'gpt-4o'
+   */
+  model?: VisionModel;
 }
 
 /**
@@ -34,9 +53,19 @@ export interface ImageTokenResult {
   tokens: number;
   
   /**
-   * Cost in USD based on current GPT-4o pricing
+   * Cost in USD based on model pricing
    */
   cost: number;
+  
+  /**
+   * Model used for calculation
+   */
+  model: string;
+  
+  /**
+   * Human-readable model name
+   */
+  modelName: string;
   
   /**
    * Calculation details
@@ -76,15 +105,59 @@ export interface ImageTokenResult {
      * Tokens per tile (always 170 for high detail)
      */
     tokensPerTile: number;
+    
+    /**
+     * Detail level used
+     */
+    detailLevel: ImageDetail;
   };
 }
 
 /**
- * GPT-4o pricing configuration
+ * Pricing configuration
  */
 export interface PricingConfig {
   /**
    * Cost per 1000 input tokens in USD
    */
   costPer1kTokens: number;
+}
+
+/**
+ * Batch calculation result
+ */
+export interface BatchCalculationResult {
+  /**
+   * Individual results for each image
+   */
+  results: ImageTokenResult[];
+  
+  /**
+   * Summary statistics
+   */
+  summary: {
+    /**
+     * Total number of images
+     */
+    totalImages: number;
+    
+    /**
+     * Total tokens across all images
+     */
+    totalTokens: number;
+    
+    /**
+     * Total cost across all images
+     */
+    totalCost: number;
+    
+    /**
+     * Breakdown by model
+     */
+    byModel: Record<string, {
+      count: number;
+      tokens: number;
+      cost: number;
+    }>;
+  };
 }
